@@ -7,8 +7,6 @@ import os
 import numpy as np
 from SALib.sample import morris, saltelli
 
-from .parameters import build_problem
-
 
 def generate_morris(problem, morris_cfg, seed=123):
     """生成 Morris 样本（先抽 num_trajectories，再选 optimal_trajectories 最优）。"""

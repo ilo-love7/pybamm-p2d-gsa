@@ -3,8 +3,12 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
+from typing import TYPE_CHECKING
 
 import pybamm
+
+if TYPE_CHECKING:
+    import pandas
 
 
 @dataclass(frozen=True)
