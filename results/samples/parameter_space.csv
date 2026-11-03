@@ -1,0 +1,25 @@
+﻿short,pybamm_key,category,baseline,lower_factor,upper_factor,lower,upper
+neg_thickness,Negative electrode thickness [m],geometry,8.52e-05,0.8,1.2,6.816e-05,0.00010224
+pos_thickness,Positive electrode thickness [m],geometry,7.56e-05,0.8,1.2,6.048e-05,9.071999999999999e-05
+sep_thickness,Separator thickness [m],geometry,1.2e-05,0.8,1.2,9.600000000000001e-06,1.44e-05
+neg_particle_r,Negative particle radius [m],geometry,5.86e-06,0.8,1.2,4.688e-06,7.032e-06
+pos_particle_r,Positive particle radius [m],geometry,5.22e-06,0.8,1.2,4.176e-06,6.264e-06
+electrode_height,Electrode height [m],geometry,0.065,0.8,1.2,0.052000000000000005,0.078
+neg_amf,Negative electrode active material volume fraction,porosity,0.75,0.8,1.2,0.6000000000000001,0.8999999999999999
+pos_amf,Positive electrode active material volume fraction,porosity,0.665,0.8,1.2,0.532,0.798
+neg_porosity,Negative electrode porosity,porosity,0.25,0.8,1.2,0.2,0.3
+sep_porosity,Separator porosity,porosity,0.47,0.8,1.2,0.376,0.564
+neg_diffusivity,Negative particle diffusivity [m2.s-1],transport,3.3e-14,0.8,1.2,2.64e-14,3.9599999999999997e-14
+pos_diffusivity,Positive particle diffusivity [m2.s-1],transport,4e-15,0.8,1.2,3.2000000000000003e-15,4.8e-15
+neg_conductivity,Negative electrode conductivity [S.m-1],transport,215.0,0.8,1.2,172.0,258.0
+transference,Cation transference number,transport,0.2594,0.8,1.2,0.20752000000000004,0.31128
+neg_bruggeman,Negative electrode Bruggeman coefficient (electrolyte),transport,1.5,0.8,1.2,1.2000000000000002,1.7999999999999998
+neg_alpha,Negative electrode charge transfer coefficient,kinetics,0.5,0.8,1.2,0.4,0.6
+pos_alpha,Positive electrode charge transfer coefficient,kinetics,0.5,0.8,1.2,0.4,0.6
+h_transfer,Total heat transfer coefficient [W.m-2.K-1],thermal,10.0,0.8,1.2,8.0,12.0
+neg_cp,Negative electrode specific heat capacity [J.kg-1.K-1],thermal,700.0,0.8,1.2,560.0,840.0
+neg_thermal_k,Negative electrode thermal conductivity [W.m-1.K-1],thermal,1.7,0.8,1.2,1.36,2.04
+cooling_area,Cell cooling surface area [m2],thermal,0.00531,0.8,1.2,0.004248,0.006371999999999999
+ambient_t,Ambient temperature [K],thermal,298.15,0.8,1.2,238.51999999999998,357.78
+c0_elyte,Initial concentration in electrolyte [mol.m-3],initial,1000.0,0.8,1.2,800.0,1200.0
+c0_neg,Initial concentration in negative electrode [mol.m-3],initial,29866.0,0.8,1.1,23892.800000000003,32852.600000000006

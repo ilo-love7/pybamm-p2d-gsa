@@ -1,0 +1,8 @@
+# P2D 全局参数敏感性分析平台依赖（项目②）
+numpy>=2.0
+scipy>=1.10
+pandas>=2.0
+matplotlib>=3.7
+PyYAML>=6.0
+pybamm>=24.1
+SALib>=1.5
