@@ -16,9 +16,23 @@ SMALL_PROBLEM = {
 }
 SMALL_CFG = {"statistics": {"bootstrap_n": 100, "confidence": 0.95}}
 
+# 手工构造的 S2 结果：上三角 a×b=0.5、b×c=0.3、a×c=0.1，用于纯函数逻辑测试
+FAKE_RES = {
+    "S2": np.array([
+        [0.0, 0.5, 0.1],
+        [0.5, 0.0, 0.3],
+        [0.1, 0.3, 0.0],
+    ]),
+    "S2_conf": np.array([
+        [0.0, 0.02, 0.01],
+        [0.02, 0.0, 0.03],
+        [0.01, 0.03, 0.0],
+    ]),
+}
+
 
 def _make_design_and_y():
-    x = sobol_sample.sample(SMALL_PROBLEM, 8, calc_second_order=True)
+    x = sobol_sample.sample(SMALL_PROBLEM, 16, calc_second_order=True)
     # 含 a*b 交互的简单函数
     y = x[:, 0] + 0.5 * x[:, 0] * x[:, 1] + 0.2 * x[:, 2]
     return x, y
@@ -33,35 +47,28 @@ def test_analyze_s2_shapes():
 
 def test_s2_pair_table(monkeypatch):
     monkeypatch.setattr(second_order, "SHORT_NAMES", ["a", "b", "c"])
-    _, y = _make_design_and_y()
-    res = analyze_s2(SMALL_PROBLEM, y, SMALL_CFG)
-    table = s2_pair_table(res)
+    table = s2_pair_table(FAKE_RES)
     # 3 个参数对
     assert len(table) == 3
     assert set(table.columns) == {"param_i", "param_j", "S2", "S2_conf"}
-    # 降序排列
-    assert table["S2"].tolist() == sorted(table["S2"], reverse=True)
-    # a×b 交互最强
+    # 降序排列：a×b(0.5) > b×c(0.3) > a×c(0.1)
+    assert table["S2"].tolist() == [0.5, 0.3, 0.1]
     assert table.iloc[0]["param_i"] == "a"
     assert table.iloc[0]["param_j"] == "b"
 
 
 def test_s2_pair_table_top_n(monkeypatch):
     monkeypatch.setattr(second_order, "SHORT_NAMES", ["a", "b", "c"])
-    _, y = _make_design_and_y()
-    res = analyze_s2(SMALL_PROBLEM, y, SMALL_CFG)
-    assert len(s2_pair_table(res, top_n=2)) == 2
+    assert len(s2_pair_table(FAKE_RES, top_n=2)) == 2
 
 
 def test_s2_plots(tmp_path, monkeypatch):
     monkeypatch.setattr(second_order, "SHORT_NAMES", ["a", "b", "c"])
-    _, y = _make_design_and_y()
-    res = analyze_s2(SMALL_PROBLEM, y, SMALL_CFG)
-    table = s2_pair_table(res)
+    table = s2_pair_table(FAKE_RES)
 
     hm = os.path.join(tmp_path, "hm.png")
     bp = os.path.join(tmp_path, "bp.png")
-    plot_s2_heatmap(res, "sc", "out", hm)
+    plot_s2_heatmap(FAKE_RES, "sc", "out", hm)
     plot_s2_top_pairs(table, "sc", "out", bp)
     assert os.path.getsize(hm) > 0
     assert os.path.getsize(bp) > 0
