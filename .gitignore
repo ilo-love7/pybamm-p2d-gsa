@@ -40,4 +40,5 @@ results/samples/*.npy
 # ===== 测试 / 覆盖率 =====
 .pytest_cache/
 .coverage
+coverage.xml
 htmlcov/

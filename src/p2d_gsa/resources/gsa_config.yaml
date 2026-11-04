@@ -47,6 +47,11 @@ sobol:
   base_n: 256              # 2^8，保证 Sobol 低差异序列收敛性质
   calc_second_order: false
 
+# 二阶 S2 专用设计（calc_second_order=true，样本数 = N*(2d+2)）
+sobol_s2:
+  base_n: 128              # 2^7
+  calc_second_order: true
+
 # 统计与不确定性
 statistics:
   bootstrap_n: 1000

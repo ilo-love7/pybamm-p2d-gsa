@@ -5,7 +5,7 @@ from __future__ import annotations
 import os
 
 import numpy as np
-from SALib.sample import morris, saltelli
+from SALib.sample import morris, sobol
 
 
 def generate_morris(problem, morris_cfg, seed=123):
@@ -24,7 +24,7 @@ def generate_morris(problem, morris_cfg, seed=123):
 def generate_saltelli(problem, sobol_cfg, seed=123):
     """生成 Saltelli 样本。"""
     np.random.seed(seed)
-    X = saltelli.sample(
+    X = sobol.sample(
         problem,
         N=sobol_cfg["base_n"],
         calc_second_order=sobol_cfg.get("calc_second_order", False),

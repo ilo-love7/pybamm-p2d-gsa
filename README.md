@@ -2,7 +2,7 @@
 
 [![Python](https://img.shields.io/badge/python-3.10%2B-blue)](https://www.python.org/)
 [![CI](https://github.com/ilo-love7/pybamm-p2d-gsa/actions/workflows/ci.yml/badge.svg)](https://github.com/ilo-love7/pybamm-p2d-gsa/actions/workflows/ci.yml)
-[![Coverage](https://img.shields.io/badge/coverage-61%25-orange)](https://github.com/ilo-love7/pybamm-p2d-gsa/actions/workflows/ci.yml)
+[![Coverage](https://img.shields.io/badge/coverage-69%25-orange)](https://github.com/ilo-love7/pybamm-p2d-gsa/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 [![PyBaMM](https://img.shields.io/badge/PyBaMM-DFN-orange)]()
 [![No Deep Learning](https://img.shields.io/badge/deep%20learning-none-brightgreen)]()
@@ -26,7 +26,13 @@
 - 全局不敏感参数白名单 17 个（ST<5%）。
 - 交互效应量化（ST−S1）：冷充析锂为强耦合过程，c0_neg 交互量 0.29、
   electrode_height 交互占比 85%；快充温升几乎为纯主效应（ambient_t 交互占比 1%）。
-  完整成对二阶 S2 需重新抽样（calc_second_order=true），当前以 ST−S1 量化交互总量。
+- 方法交叉验证：Morris μ* 与 Sobol ST 秩高度一致，s1/s3 Spearman 分别为 0.96/0.91，
+  强非线性 2C 工况（s2）两方法分歧更大（0.71）；跨工况共识重要参数为 ambient_t、
+  c0_neg、electrode_height。
+- 完整成对二阶 S2：独立二阶 Saltelli 设计（calc_second_order=true，6400×24，三工况
+  共 19200 次仿真，失败率 0.08%–0.66%）。1C 放电容量最强交互为 electrode_height×
+  c0_neg（S2=0.25）；冷充析锂为 neg_thickness×c0_neg（0.16）；2C 温升所有成对
+  S2 均 <0.03，印证 ambient_t 近乎纯主效应。
 
 ## 模型与参数
 
@@ -59,6 +65,8 @@
 │   ├── runner.py           # 并行 + 断点续跑 + 失败处理
 │   ├── analysis.py         # S1/ST、bootstrap CI、收敛、白名单
 │   ├── interactions.py     # ST−S1 交互量化与参数效应图谱
+│   ├── cross_validation.py # Morris/Sobol 交叉验证与参数共识图谱
+│   ├── second_order.py     # 完整成对二阶 S2 分析
 │   └── plotting.py         # 报告配图
 ├── scripts/
 └── results/                # 样本、CSV、figures、日志
@@ -81,6 +89,13 @@ p2d-gsa all                    # 一键全流程
 
 # 交互效应量化（ST−S1，无需新仿真）
 python scripts/run_interaction_analysis.py
+
+# Morris/Sobol 交叉验证 + 参数共识图谱（fig13/14）
+python scripts/run_cross_validation.py
+
+# 完整成对二阶 S2：独立设计仿真（断点续跑）后分析（fig15/16）
+python scripts/run_s2_simulation.py
+python scripts/run_s2_analysis.py
 ```
 
 ## 验收口径

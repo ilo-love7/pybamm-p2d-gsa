@@ -1,0 +1,42 @@
+name: Feature request
+description: Suggest an enhancement or new capability
+labels: ["enhancement"]
+body:
+  - type: markdown
+    attributes:
+      value: "## Feature request"
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem / motivation
+      description: What problem are you trying to solve?
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposed solution
+      description: Describe the behavior or output you would like.
+    validations:
+      required: true
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives considered
+    validations:
+      required: false
+  - type: dropdown
+    id: scope
+    attributes:
+      label: Area
+      options:
+        - Sampling / design of experiments
+        - PyBaMM simulation / solver
+        - Sensitivity analysis (Morris / Sobol)
+        - Visualization / reporting
+        - CLI / config
+        - Tests / tooling
+        - Documentation
+        - Other
+    validations:
+      required: true
