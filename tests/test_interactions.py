@@ -12,7 +12,8 @@ sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)),
 
 from p2d_gsa.interactions import (
     SOBOL_SOURCES, build_interaction_table, interaction_frame,
-    main_output_interaction_matrix,
+    main_output_interaction_matrix, plot_effect_atlas,
+    plot_interaction_heatmap, plot_interaction_share_bars,
 )
 
 
@@ -64,3 +65,20 @@ def test_main_output_matrix(tmp_path):
                                    "s3_cold_charge"]
     assert list(matrix.index) == ["a", "b", "c"]
     assert np.isfinite(matrix.to_numpy()).all()
+
+
+def test_interaction_plot_functions(tmp_path):
+    for _, _, fn in SOBOL_SOURCES:
+        make_sobol_df().to_csv(tmp_path / fn, index=False)
+    table = build_interaction_table(str(tmp_path))
+    matrix = main_output_interaction_matrix(table)
+
+    p1 = tmp_path / "heat.png"
+    plot_interaction_heatmap(matrix, str(p1))
+    assert p1.exists()
+    p2 = tmp_path / "bars.png"
+    plot_interaction_share_bars(table, str(p2))
+    assert p2.exists()
+    p3 = tmp_path / "atlas.png"
+    plot_effect_atlas(table, str(p3))
+    assert p3.exists()

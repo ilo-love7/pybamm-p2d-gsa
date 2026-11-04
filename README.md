@@ -1,6 +1,8 @@
 # 基于 PyBaMM 的 P2D 模型全局参数敏感性分析平台
 
 [![Python](https://img.shields.io/badge/python-3.10%2B-blue)](https://www.python.org/)
+[![CI](https://github.com/ilo-love7/pybamm-p2d-gsa/actions/workflows/ci.yml/badge.svg)](https://github.com/ilo-love7/pybamm-p2d-gsa/actions/workflows/ci.yml)
+[![Coverage](https://img.shields.io/badge/coverage-61%25-orange)](https://github.com/ilo-love7/pybamm-p2d-gsa/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 [![PyBaMM](https://img.shields.io/badge/PyBaMM-DFN-orange)]()
 [![No Deep Learning](https://img.shields.io/badge/deep%20learning-none-brightgreen)]()
@@ -22,6 +24,9 @@
 - 2C 快充温升由环境温度绝对主导（ambient_t ST=0.96）。
 - 负极表面电位（析锂指示）由负极初始浓度绝对主导（c0_neg ST=0.91）。
 - 全局不敏感参数白名单 17 个（ST<5%）。
+- 交互效应量化（ST−S1）：冷充析锂为强耦合过程，c0_neg 交互量 0.29、
+  electrode_height 交互占比 85%；快充温升几乎为纯主效应（ambient_t 交互占比 1%）。
+  完整成对二阶 S2 需重新抽样（calc_second_order=true），当前以 ST−S1 量化交互总量。
 
 ## 模型与参数
 
@@ -42,29 +47,40 @@
 
 ```
 .
-├── run_gsa.py              # config 驱动统一入口
+├── run_gsa.py              # 薄包装入口
 ├── configs/gsa_config.yaml
 ├── src/p2d_gsa/
+│   ├── cli.py              # 包内统一入口（console 命令 p2d-gsa）
+│   ├── config.py           # 多来源配置解析
+│   ├── pipeline.py         # 全量分析编排
 │   ├── parameters.py       # 24 参数空间与逐参数范围
 │   ├── model.py            # DFN+热，单次仿真
 │   ├── sampling.py         # Morris/Saltelli 抽样
 │   ├── runner.py           # 并行 + 断点续跑 + 失败处理
 │   ├── analysis.py         # S1/ST、bootstrap CI、收敛、白名单
+│   ├── interactions.py     # ST−S1 交互量化与参数效应图谱
 │   └── plotting.py         # 报告配图
 ├── scripts/
 └── results/                # 样本、CSV、figures、日志
 ```
 
-## 使用
+## 安装与使用
 
 ```bash
-python -m pip install -r requirements.txt
+# 作为包安装（提供 console 命令 p2d-gsa）
+python -m pip install .
+# 开发模式（含测试/ruff 等开发依赖）
+python -m pip install -e ".[dev]"
 
-python run_gsa.py sample                 # 生成设计
-python run_gsa run                       # 跑仿真（断点续跑，可中断重跑）
-python run_gsa run --method morris       # 只跑 Morris
-python run_gsa analyze                   # 分析、出图、白名单
-python run_gsa all                       # 一键全流程
+# 以下命令用 p2d-gsa 或 python run_gsa.py 等价
+p2d-gsa sample                 # 生成设计
+p2d-gsa run                    # 跑仿真（断点续跑，可中断重跑）
+p2d-gsa run --method morris    # 只跑 Morris
+p2d-gsa analyze                # 分析、出图、白名单
+p2d-gsa all                    # 一键全流程
+
+# 交互效应量化（ST−S1，无需新仿真）
+python scripts/run_interaction_analysis.py
 ```
 
 ## 验收口径
